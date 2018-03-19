@@ -7,9 +7,9 @@ Work by: Christine Dierk, Sarah Sterman, Molly Jane Nicholas, Eric Paulos
 Hybrid Ecologies Lab
 hybrid-ecologies.org
 
-(Video)[https://www.youtube.com/watch?v=8JV2D7gJ5HI]
+[Video](https://www.youtube.com/watch?v=8JV2D7gJ5HI)
 
-(Paper)[https://dl.acm.org/citation.cfm?id=3173232]
+[Paper](https://dl.acm.org/citation.cfm?id=3173232)
 
 ## Arduino sketches
 
@@ -30,5 +30,5 @@ In *hairio_full_3* you will find the Eagle schematic and board file for the inte
 
 ## Instructable
 
-For a full description of this project, please see the (Instructable)[https://www.instructables.com/id/HairIO-Hair-As-Interactive-Material/] 
+For a full description of this project, please see the [Instructable](https://www.instructables.com/id/HairIO-Hair-As-Interactive-Material/)
 
