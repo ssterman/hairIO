@@ -1,4 +1,4 @@
-/**
+ /**
  * Demo code for bluetooth enabled PCB
  * ***********************************
  * Uses Bluefruit app on phone to receive captouch signals and toggle driving
@@ -266,44 +266,23 @@ void analyzeInput(int timeArr[], int voltageArr[]) {
   /* ====================================================================
     Gesture compare
     ====================================================================  */
-//  int currentMax = 0;
-//  int currentMaxValue = -1;
-//  for (int i = 0; i < 2; i++)
-//  {
-//    //calculate individual dist
-//    struct index_val iv = getMaxFromArray(voltageArr, N);
-////    gestureDist[i] = dist(iv.index, iv.val, currentBraid.gesturePoints[i][0], currentBraid.gesturePoints[i][1]);
-//          //unclear if version of dist above is right or version below....
-//    gestureDist[i] = dist(getMaxFromArray(timeArr, N).val, getMaxFromArray(voltageArr, N).val, currentBraid.gesturePoints[i][0], currentBraid.gesturePoints[i][1]);
-//    if (gestureDist[i] < currentMaxValue || i == 0)
-//    {
-//      currentMax = i;
-//      currentMaxValue =  gestureDist[i];
-//    }
-//  }
+  int currentMax = 0;
+  int currentMaxValue = -1;
+  for (int i = 0; i < 2; i++)
+  {
+    //calculate individual dist
+    struct index_val iv = getMaxFromArray(voltageArr, N);
+    gestureDist[i] = dist(iv.index, iv.val, currentBraid.gesturePoints[i][0], currentBraid.gesturePoints[i][1]);
+    if (gestureDist[i] < currentMaxValue || i == 0)
+    {
+      currentMax = i;
+      currentMaxValue =  gestureDist[i];
+    }
+  }
 
-  int max_ = getMaxFromArray(voltageArr, N).val;
-  float touch_dist = abs(max_ - currentBraid.gesturePoints[1][1]);
-  float notouch_dist = abs(max_ - currentBraid.gesturePoints[0][1]);
-  if (touch_dist < notouch_dist) {
-    curGesture = 1;
-  } else {
-    curGesture = 0;
-  }
- 
-  if (currentBraid.name_message == "Braid 0") {
-    Serial.print("Max: ");
-    Serial.println(max_);
-    Serial.println("touch, notouch dist: "); 
-    Serial.println(touch_dist);
-    Serial.println(notouch_dist);
-    Serial.println("touch threshold x, notouch trheshold x: "); 
-    Serial.println(currentBraid.gesturePoints[1][1]);
-    Serial.println(currentBraid.gesturePoints[0][1]);
-  }
-//  int type = currentMax;
-//  lastGesture = curGesture;
-//  curGesture = type;
+  int type = currentMax;
+  lastGesture = curGesture;
+  curGesture = type;
 }
 
 
@@ -444,7 +423,7 @@ void do_captouch(){
   capacitiveSweep();
   
   //this would send the data to processing
-  //PlottArray(1,freq,results);
+//  PlottArray(1,freq,results);
 
   // instead of sending to processing, do the work here
   analyzeInput(freq, results);
@@ -531,15 +510,15 @@ void loop()
   {
     int c = ble.read();
     received = received + (char) c;
-    if (received.equals("!B10;")){        
-        turnOffDrive();   //ensure 1 is off
+    if (received.equals("!B10;") || received.equals("0")){        
+        turnOffDrive();   //both off
         reset_mux(braid0);
         turnOnDrive();    //turn the hair0 drive on
-    } else if (received.equals("!B20")){
-        turnOffDrive();  //ensure 0 is off
+    } else if (received.equals("!B20") || received.equals("1")){
+        turnOffDrive();  //both off
         reset_mux(braid1);
         turnOnDrive();   //turn the hair1 drive on
-    } else if (received.equals("!B30") || received.equals("!B40") ){ 
+    } else if (received.equals("!B30") || received.equals("!B40") || received.equals("x")){ 
         turnOffDrive(); //turn all drive off
     } else if (received.equals("c")) { // send via the UART control panel
       sendBLEMessage("\n\n\n");
@@ -555,12 +534,12 @@ void loop()
     }
   }
   
-//  if (driving) {
-//      float temp = readThermistor();
-//      thermistorThrottle(temp); //turn it off if temp is too high
-//  }
-//
-//  monitorBatteries();
+  if (driving) {
+      float temp = readThermistor();
+      thermistorThrottle(temp); //turn it off if temp is too high
+  }
+
+  monitorBatteries();
 
   TOG(PORTB, 0);           //-Toggle pin 8 after each sweep (good for scope)
 }
